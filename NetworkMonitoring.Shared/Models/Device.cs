@@ -1,0 +1,1 @@
+namespace NetworkMonitoring.Shared.Models { public class Device { public int DeviceId { get; set; } public int DeviceTypeId { get; set; } public int LocationId { get; set; } public string DeviceName { get; set; } = string.Empty; public string IPAddress { get; set; } = string.Empty; public string? Description { get; set; } public bool Suspend { get; set; } } }

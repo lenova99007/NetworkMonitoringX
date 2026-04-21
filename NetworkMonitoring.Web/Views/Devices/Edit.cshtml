@@ -1,0 +1,10 @@
+@model NetworkMonitoring.Shared.Models.Device
+<h2>Edit Device</h2>
+<form method="post" asp-action="Edit">
+  <input type="hidden" asp-for="DeviceId" />
+  <input asp-for="DeviceName" class="form-control mb-2" />
+  <input asp-for="IPAddress" class="form-control mb-2" />
+  <select asp-for="DeviceTypeId" class="form-control mb-2">@foreach(var t in ViewBag.Types){<option value='@t.DeviceTypeId' selected='@(t.DeviceTypeId==Model.DeviceTypeId)'>@t.TypeName</option>}</select>
+  <select asp-for="LocationId" class="form-control mb-2">@foreach(var l in ViewBag.Locations){<option value='@l.LocationId' selected='@(l.LocationId==Model.LocationId)'>@l.LocationName_En</option>}</select>
+  <button class="btn btn-primary">Save</button>
+</form>

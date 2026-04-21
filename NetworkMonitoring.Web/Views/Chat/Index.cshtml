@@ -1,0 +1,48 @@
+@model IEnumerable<NetworkMonitoring.Shared.Models.ChatMessage>
+@{ ViewData["Title"] = "Chat"; }
+<h2>Chat</h2>
+<div id="chatArea" style="height:400px; overflow:auto; border:1px solid #ddd; padding:10px;">
+@foreach(var m in Model){
+    <div><strong>@(m.SenderId)</strong>: @m.MessageText <small class="text-muted">@m.CreatedAt</small></div>
+}
+</div>
+<div class="mt-2">
+    <input id="senderId" type="hidden" value="1" />
+    <input id="receiverId" type="hidden" value="0" />
+    <input id="senderName" class="form-control mb-2" placeholder="Your name" value="admin" />
+    <input id="messageInput" class="form-control mb-2" placeholder="Type message" />
+    <button id="sendBtn" class="btn btn-primary">Send</button>
+</div>
+
+@section Scripts {
+<script src="/lib/signalr/signalr.min.js"></script>
+<script>
+    const hubUrl = '/chathub';
+    const connection = new signalR.HubConnectionBuilder().withUrl(hubUrl).withAutomaticReconnect().build();
+    connection.on('ReceiveMessage', m => {
+        const area = document.getElementById('chatArea');
+        const div = document.createElement('div');
+        div.innerHTML = '<strong>' + (m.senderName||m.senderId) + '</strong>: ' + m.message + ' <small class="text-muted">' + new Date(m.sentAt).toLocaleString() + '</small>';
+        area.appendChild(div);
+        area.scrollTop = area.scrollHeight;
+    });
+    connection.on('ReceiveLog', log => {
+        const area = document.getElementById('chatArea');
+        const div = document.createElement('div');
+        div.innerHTML = '<em>[' + log.logType + '] ' + log.deviceName + ':</em> ' + log.message + ' <small class="text-muted">' + new Date(log.timestamp).toLocaleString() + '</small>';
+        area.appendChild(div);
+        area.scrollTop = area.scrollHeight;
+    });
+    connection.start().catch(err => console.error(err.toString()));
+
+    document.getElementById('sendBtn').addEventListener('click', () => {
+        const senderId = parseInt(document.getElementById('senderId').value||'0');
+        const receiverId = parseInt(document.getElementById('receiverId').value||'0');
+        const senderName = document.getElementById('senderName').value;
+        const message = document.getElementById('messageInput').value;
+        connection.invoke('SendMessage', { senderId, receiverId, senderName, message, sentAt: new Date().toISOString() })
+            .catch(err => console.error(err.toString()));
+        document.getElementById('messageInput').value = '';
+    });
+</script>
+}

@@ -1,0 +1,6 @@
+<Project>
+  <PropertyGroup>
+    <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
+    <TypeScriptEnabled>false</TypeScriptEnabled>
+  </PropertyGroup>
+</Project>

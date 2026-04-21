@@ -1,0 +1,17 @@
+
+
+**/Debug
+**/Release
+packages
+Publish
+**/.vs
+.gitattributes
+*.zip
+*.config
+*.config
+bin/
+obj/
+.vs/
+node_modules/
+*.log
+*.user

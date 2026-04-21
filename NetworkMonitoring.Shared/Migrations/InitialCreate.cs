@@ -1,0 +1,1 @@
+// EF Core migration scaffold placeholder

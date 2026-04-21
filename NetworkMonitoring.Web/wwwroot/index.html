@@ -1,0 +1,21 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>Dashboard</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/9.0.0/signalr.min.js"></script>
+</head>
+<body>
+<h2>Live Alerts</h2>
+<ul id="alerts"></ul>
+<script>
+const connection = new signalR.HubConnectionBuilder().withUrl("/alertHub").build();
+connection.on("ReceiveAlert", (d,m,s)=>{
+ let li=document.createElement("li");
+ li.innerText=d+" ["+s+"]: "+m;
+ document.getElementById("alerts").appendChild(li);
+});
+connection.start();
+</script>
+</body>
+</html>

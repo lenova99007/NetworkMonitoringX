@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SignalR Alert Hub Test</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.7/signalr.min.js"></script>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        .alert { border: 1px solid #ccc; padding: 10px; margin: 5px; border-radius: 5px; }
+        .info { background: #e3f2fd; }
+        .warning { background: #fff3e0; }
+        .error { background: #ffebee; }
+        input, button { margin: 5px; padding: 8px; }
+    </style>
+</head>
+<body>
+    <h1>SignalR Alert Hub Tester</h1>
+    
+    <div>
+        <h3>Send Test Alert:</h3>
+        <input type="text" id="device" placeholder="Device Name" value="TestServer" />
+        <input type="text" id="message" placeholder="Message" value="Test alert message" />
+        <select id="severity">
+            <option value="Info">Info</option>
+            <option value="Warning">Warning</option>
+            <option value="Error">Error</option>
+        </select>
+        <button onclick="sendAlert()">Send Alert</button>
+    </div>
+    
+    <hr />
+    
+    <h3>Received Alerts:</h3>
+    <div id="alerts"></div>
+    
+    <div>
+        <h3>Connection Status:</h3>
+        <div id="status">Connecting...</div>
+    </div>
+    
+    <script>
+        let connection;
+        
+        async function connect() {
+            connection = new signalR.HubConnectionBuilder()
+                .withUrl("/alertHub")
+                .withAutomaticReconnect()
+                .build();
+            
+            connection.on("ReceiveAlert", (alert) => {
+                const alertsDiv = document.getElementById("alerts");
+                const alertDiv = document.createElement("div");
+                alertDiv.className = `alert ${alert.severity.toLowerCase()}`;
+                alertDiv.innerHTML = `
+                    <strong>${alert.device}</strong> 
+                    [${alert.severity}]: ${alert.message}
+                    <br/><small>${new Date(alert.createdAt).toLocaleString()}</small>
+                `;
+                alertsDiv.insertBefore(alertDiv, alertsDiv.firstChild);
+            });
+            
+            try {
+                await connection.start();
+                document.getElementById("status").innerHTML = "✅ Connected to hub";
+                document.getElementById("status").style.color = "green";
+            } catch (err) {
+                console.error(err);
+                document.getElementById("status").innerHTML = "❌ Connection failed: " + err.message;
+                document.getElementById("status").style.color = "red";
+            }
+        }
+        
+        async function sendAlert() {
+            if (!connection || connection.state !== "Connected") {
+                alert("Not connected to hub!");
+                return;
+            }
+            
+            const device = document.getElementById("device").value;
+            const message = document.getElementById("message").value;
+            const severity = document.getElementById("severity").value;
+            
+            try {
+                await connection.invoke("SendAlert", device, message, severity);
+                console.log("Alert sent!");
+            } catch (err) {
+                console.error(err);
+                alert("Error sending alert: " + err.message);
+            }
+        }
+        
+        connect();
+    </script>
+</body>
+</html>

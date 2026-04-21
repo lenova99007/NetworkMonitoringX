@@ -1,0 +1,13 @@
+@model IEnumerable<NetworkMonitoring.Shared.Models.Device>
+@{ ViewData["Title"] = "Devices"; }
+<h2>Devices</h2>
+<p><a class="btn btn-primary" asp-action="Create">Create</a></p>
+<table class="table">
+    <thead><tr><th>ID</th><th>Name</th><th>IP</th><th></th></tr></thead>
+    <tbody>
+        @foreach (var d in Model)
+        {
+            <tr><td>@d.DeviceId</td><td>@d.DeviceName</td><td>@d.IPAddress</td><td><a asp-action='Edit' asp-route-id='@d.DeviceId' class='btn btn-sm btn-secondary'>Edit</a> <a asp-action='Delete' asp-route-id='@d.DeviceId' class='btn btn-sm btn-danger'>Delete</a></td></tr>
+}
+    </tbody>
+</table>

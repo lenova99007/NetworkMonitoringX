@@ -1,0 +1,45 @@
+@page "/chat"
+@using NetworkMonitoring.Shared.Models
+@inject NetworkMonitoring.Maui.Services.SignalRService SignalR
+
+<h3>MAUI Chat</h3>
+
+<input @bind="user" placeholder="User" />
+<input @bind="message" placeholder="Message" />
+<button @onclick="Send">Send</button>
+
+<ul>
+    @foreach (var m in messages)
+    {
+        <li>@m.SenderName: @m.Message</li>
+    }
+</ul>
+
+@code {
+    string user = "muser";
+    string message = string.Empty;
+    List<ChatMessageDto> messages = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        SignalR.OnMessage += m =>
+        {
+            messages.Add(m);
+            InvokeAsync(StateHasChanged);
+        };
+
+        await SignalR.StartAsync();
+    }
+
+    async Task Send()
+    {
+        await SignalR.SendMessageAsync(new ChatMessageDto
+        {
+            SenderId = "1",
+            ReceiverId = "0",
+            SenderName = user,
+            Message = message
+        });
+        message = string.Empty;
+    }
+}
