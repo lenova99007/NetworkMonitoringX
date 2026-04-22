@@ -1,5 +1,3 @@
-
-
 **/Debug
 **/Release
 packages
@@ -15,3 +13,4 @@ obj/
 node_modules/
 *.log
 *.user
+.tmp.driveupload/
