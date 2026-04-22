@@ -21,7 +21,8 @@ namespace NetworkMonitoring.Service.Workers
                     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
                     // TODO: replace with configured endpoints
                     var res = await _http.GetAsync("https://example.com", stoppingToken);
-                    db.HttpLogs.Add(new HttpLog { DeviceId = 1, ResultMessage = res.IsSuccessStatusCode ? "200 OK" : "Error", IsIssue = !res.IsSuccessStatusCode, SessionId = Guid.NewGuid().ToString(), CreatedAt = DateTime.UtcNow });
+
+                    db.HttpLogs.Add(new HttpLog { DeviceId = 1, ResultMessage = res.IsSuccessStatusCode ? "200 OK" : "Error", IsIssue = !res.IsSuccessStatusCode, HSessionId = DateTime.UtcNow.Ticks, CreatedAt = DateTime.UtcNow });
                     await db.SaveChangesAsync(stoppingToken);
                 }
                 catch (Exception ex)

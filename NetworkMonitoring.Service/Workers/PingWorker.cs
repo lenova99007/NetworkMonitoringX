@@ -19,7 +19,7 @@ namespace NetworkMonitoring.Service.Workers
                     using var scope = _sp.CreateScope();
                     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
                     // TODO: replace with real ping logic
-                    db.PingLogs.Add(new PingLog { DeviceId = 1, ResultMessage = "Ping OK (sample)", IsIssue = false, SessionId = Guid.NewGuid().ToString(), CreatedAt = DateTime.UtcNow });
+                    db.PingLogs.Add(new PingLog { DeviceId = 1, ResultMessage = "Ping OK (sample)", IsIssue = false, SessionId = DateTime.UtcNow.Ticks, CreatedAt = DateTime.UtcNow });
                     await db.SaveChangesAsync(stoppingToken);
                 }
                 catch (Exception ex)

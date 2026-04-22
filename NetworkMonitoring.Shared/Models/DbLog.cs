@@ -6,26 +6,29 @@ namespace NetworkMonitoring.Shared.Models
 {
     public class DbLog
     {
-        //public int DbLogId { get; set; }
-        //public int DeviceId { get; set; }
-        //public string DbSizeInfo { get; set; } = string.Empty;
-        //public string SessionId { get; set; } = string.Empty;
-        //public System.DateTime CreatedAt { get; set; } = DateTime.Now;
-        //public bool IsSuspended { get; set; }
-        //public int Id { get; set; }
-        //public string DatabaseName { get; set; } = string.Empty;
-        //public long SizeInMB { get; set; }
+
         [Key]
-        //   [Display(Name = "Ping Log Id")]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long DbLogId { get; set; }
-        public int DbDeviceId { get; set; } = 1;
-        public long DbSessionId { get; set; } = 1;
+        public int? DbDeviceId { get; set; }
+        public long? DbSessionId { get; set; }
         [Column(TypeName = "nvarchar(MAX)")]
         public string DbSizeInfo { get; set; } = string.Empty;
-        public Boolean DbisIssue { get; set; } = false;
-        public DateTime DbDate { get; set; } = DateTime.Now;
-        public DateTime DbTime { get; set; } = DateTime.Now;
-        public Boolean DbSuspend { get; set; } = false;
+        public bool? DbisIssue { get; set; }
+        public DateTime? DbDate { get; set; }
+        public TimeSpan? DbTime { get; set; }
+        public bool? DbSuspend { get; set; }
+
+        [NotMapped]
+        public DateTime CreatedAt
+        {
+            get => (DbDate ?? DateTime.UtcNow.Date) + (DbTime ?? TimeSpan.Zero);
+            set
+            {
+                DbDate = value.Date;
+                DbTime = value.TimeOfDay;
+            }
+        }
     }
+}
 }

@@ -19,7 +19,7 @@ namespace NetworkMonitoring.Service.Workers
                     using var scope = _sp.CreateScope();
                     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
                     // Example: query for DB size (placeholder)
-                    db.DbLogs.Add(new DbLog { DeviceId = 1, DbSizeInfo = "DB size: 100MB", DbSessionId = "", DbDate = DateTime.UtcNow });
+                    db.DbLogs.Add(new DbLog { DbDeviceId = 1, DbSizeInfo = "DB size: 100MB", DbSessionId = DateTime.UtcNow.Ticks, DbDate = DateTime.UtcNow.Date, DbTime = DateTime.UtcNow });
                     await db.SaveChangesAsync(stoppingToken);
                 }
                 catch (Exception ex)

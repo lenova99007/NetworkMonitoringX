@@ -21,5 +21,21 @@ namespace NetworkMonitoring.Data
         public DbSet<ServicesLog> ServicesLogs { get; set; }
         public DbSet<DbLog> DbLogs { get; set; }
         public DbSet<ChatMessage> ChatMessages { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<AlertLog>().ToTable("T_AlertLogs");
+            modelBuilder.Entity<Device>().ToTable("T_Device");
+            modelBuilder.Entity<EmailGroup>().ToTable("T_EmailGroups");
+            modelBuilder.Entity<Login>().ToTable("T_Login");
+            modelBuilder.Entity<PingLog>().ToTable("T_PingLogs");
+            modelBuilder.Entity<HttpLog>().ToTable("T_HttpLogs");
+            modelBuilder.Entity<HddLog>().ToTable("T_HddLogs");
+            modelBuilder.Entity<ServicesLog>().ToTable("T_ServicesLogs");
+            modelBuilder.Entity<DbLog>().ToTable("T_DbLogs");
+            modelBuilder.Entity<ChatMessage>().ToTable("T_ChatMessages");
+        }
     }
 }

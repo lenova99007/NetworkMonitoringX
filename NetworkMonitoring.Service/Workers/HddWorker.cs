@@ -18,8 +18,8 @@ namespace NetworkMonitoring.Service.Workers
                 {
                     using var scope = _sp.CreateScope();
                     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-                    // TODO: insert real HDD monitoring logic here
-                    db.HddLogs.Add(new HddLog { DeviceId = 1, HDDInfo = "C: 120GB free", SessionId = Guid.NewGuid().ToString(), CreatedAt = DateTime.UtcNow });
+                    // TODO: insert real HDD monitoring logic here      
+                    db.HddLogs.Add(new HddLog { DeviceId = 1, HDDInfo = "C: 120GB free", HdSessionId = DateTime.UtcNow.Ticks, CreatedAt = DateTime.UtcNow });
                     await db.SaveChangesAsync(stoppingToken);
                 }
                 catch (Exception ex)
